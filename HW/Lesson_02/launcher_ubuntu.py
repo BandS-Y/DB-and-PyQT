@@ -4,7 +4,6 @@ for more information:
 https://stackoverflow.com/questions/67348716/kill-process-do-not-kill-the-subprocess-and-do-not-close-a-terminal-window
 """
 
-
 import os
 import signal
 import subprocess
