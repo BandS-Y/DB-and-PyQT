@@ -1,5 +1,4 @@
 """Программа-сервер"""
-
 import sys
 import socket
 import argparse
