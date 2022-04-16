@@ -11,7 +11,7 @@ from common.utils import get_message, send_message
 from decos import log
 from metaclasses import ServerVerifier
 from descrptrs import Port
-from server_database import ServerDB
+from server_databasepy import ServerDB
 import threading
 
 # Инициализация логирования сервера.
