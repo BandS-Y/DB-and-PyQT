@@ -22,23 +22,24 @@ from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import configparser   # https://docs.python.org/3/library/configparser.html
 
-
-
 # Инициализация логирования сервера.
 LOGGER = logging.getLogger('server')
 
-# Флаг, что был подключён новый пользователь, нужен чтобы не мучать BD
+# Флаг, что был подключён новый пользователь, нужен чтобы не нагружать BD
 # постоянными запросами на обновление
 new_connection = False
 conflag_lock = threading.Lock()
 
+
 # Парсер аргументов командной строки.
 @log
-def arg_parser(efault_port, default_address):
-    """Парсер аргументов командной строки"""
+def arg_parser(default_port, default_address):
+    """
+    Парсер аргументов командной строки
+    """
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
-    parser.add_argument('-a', default='', nargs='?')
+    parser.add_argument('-p', default=default_port, type=int, nargs='?')
+    parser.add_argument('-a', default=default_address, nargs='?')
     namespace = parser.parse_args(sys.argv[1:])
     listen_address = namespace.a
     listen_port = namespace.p
@@ -57,9 +58,9 @@ def arg_parser(efault_port, default_address):
     return listen_address, listen_port
 
 
-"""    Основной класс сервера    """
-
-
+"""    
+Основной класс сервера    
+"""
 class Server(threading.Thread, metaclass=ServerVerifier):
     port = Port()
 
@@ -281,10 +282,10 @@ def main():
         config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
 
     # Инициализация базы данных
-    database = ServerDB(
-        os.path.join(
-            config['SETTINGS']['Database_path'],
-            config['SETTINGS']['Database_file']))
+    database = ServerDB()
+        # os.path.join(
+        #     config['SETTINGS']['Database_path'],
+        #     config['SETTINGS']['Database_file']))
 
     # Создание экземпляра класса - сервера, подключение к БД, запуск
     server = Server(listen_address, listen_port, database)

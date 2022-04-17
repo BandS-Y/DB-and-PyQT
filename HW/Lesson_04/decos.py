@@ -17,7 +17,6 @@ def log(func_to_log):
         logger_name = 'server' if 'server.py' in sys.argv[0] else 'client'
         LOGGER = logging.getLogger(logger_name)
 
-
         LOGGER.debug(f'Была вызвана функция {func_to_log.__name__} c параметрами {args}, {kwargs}. '
                      f'Вызов из модуля {func_to_log.__module__}')
         ret = func_to_log(*args, **kwargs)

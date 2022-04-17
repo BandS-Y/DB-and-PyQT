@@ -1,17 +1,20 @@
 """Утилиты"""
 
 import sys
+import os
+# sys.path.append(os.path.join(os.getcwd(),'..'))
 import json
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
 from errors import IncorrectDataRecivedError, NonDictInputError
 from decos import log
+sys.path.append('../')
 
 
 @log
 def get_message(client):
     """
-    Утилита приёма и декодирования сообщения принимает байты выдаёт словарь,
-    если приняточто-то другое отдаёт ошибку значения
+    Утилита приёма и декодирования сообщения принимает байты - выдаёт словарь,
+    если принято что-то другое отдаёт ошибку значения.
     :param client:
     :return:
     """
