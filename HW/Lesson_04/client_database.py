@@ -1,134 +1,183 @@
+"""
+ORM для клиента
+Декларативный стиль
+"""
+
 from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData, DateTime
 from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from common.variables import *
 import datetime
 
-
-# Класс - база данных сервера.
+"""
+Класс - база данных сервера.
+"""
 class ClientDatabase:
-    # Класс - отображение таблицы известных пользователей.
-    class KnownUsers:
+    Base = declarative_base()
+
+    class KnownUsers(Base):
+        """
+        # Класс - отображение таблицы известных пользователей.
+        """
+        # Создаём таблицу известных пользователей
+        __tablename__ = 'known_users'
+        id = Column(Integer, primary_key=True)
+        username = Column(String)
+
+        # Создаём экземпляр класса KnownUsers
         def __init__(self, user):
-            self.id = None
             self.username = user
 
     # Класс - отображение таблицы истории сообщений
-    class MessageHistory:
+    class MessageHistory(Base):
+        """
+        Класс - отображение таблицы истории сообщений
+        """
+        # Создаём таблицу истории сообщений
+        __tablename__ = 'message_history'
+        id = Column(Integer, primary_key=True)
+        from_user = Column(String)
+        to_user = Column(String)
+        message = Column(Text)
+        date = Column(DateTime)
+
+        # Создаём экземпляр класса message_history
         def __init__(self, from_user, to_user, message):
-            self.id = None
             self.from_user = from_user
             self.to_user = to_user
             self.message = message
             self.date = datetime.datetime.now()
 
-    # Класс - отображение списка контактов
-    class Contacts:
+    class Contacts(Base):
+        """
+        Класс - отображение списка контактов
+        """
+        # Создаём таблицу контактов
+        __tablename__ = 'contacts'
+        id = Column(Integer, primary_key=True)
+        name = Column(String, unique=True)
+
+        # Создаём экземпляр класса contacts
         def __init__(self, contact):
             self.id = None
             self.name = contact
 
     # Конструктор класса:
     def __init__(self, name):
-        # Создаём движок базы данных, поскольку разрешено несколько клиентов одновременно,
-        # каждый должен иметь свою БД.
-        # Поскольку клиент мультипоточный, то необходимо отключить проверки на подключения
-        # с разных потоков, иначе sqlite3.ProgrammingError
-        self.database_engine = create_engine(f'sqlite:///client_{name}.db3',
-                                             echo=False,
-                                             pool_recycle=7200,
-                                             connect_args={'check_same_thread': False})
-
-        # Создаём объект MetaData
-        self.metadata = MetaData()
-
-        # Создаём таблицу известных пользователей
-        users = Table('known_users', self.metadata,
-                      Column('id', Integer, primary_key=True),
-                      Column('username', String)
-                      )
-
-        # Создаём таблицу истории сообщений
-        history = Table('message_history', self.metadata,
-                        Column('id', Integer, primary_key=True),
-                        Column('from_user', String),
-                        Column('to_user', String),
-                        Column('message', Text),
-                        Column('date', DateTime)
-                        )
-
-        # Создаём таблицу контактов
-        contacts = Table('contacts', self.metadata,
-                         Column('id', Integer, primary_key=True),
-                         Column('name', String, unique=True)
-                         )
+        """
+        Создаём движок базы данных, поскольку разрешено несколько клиентов одновременно,
+        каждый должен иметь свою БД.
+        Поскольку клиент мультипоточный, то необходимо отключить проверки на подключения
+        с разных потоков, иначе sqlite3.ProgrammingError
+        echo=False - отключает вывод на экран sql-запросов
+        pool_recycle - по умолчанию соединение с БД через 8 часов простоя обрывается
+        Чтобы этого не случилось необходимо добавить pool_recycle=7200 (переустановка
+        соединения через каждые 2 часа)
+        """
+        self.engine = create_engine(f'sqlite:///client_{name}.db3',
+                                    echo=False,
+                                    pool_recycle=7200,
+                                    connect_args={'check_same_thread': False})
 
         # Создаём таблицы
-        self.metadata.create_all(self.database_engine)
-
-        # Создаём отображения
-        mapper(self.KnownUsers, users)
-        mapper(self.MessageHistory, history)
-        mapper(self.Contacts, contacts)
+        self.Base.metadata.create_all(self.engine)
 
         # Создаём сессию
-        Session = sessionmaker(bind=self.database_engine)
+        Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
         # Необходимо очистить таблицу контактов, т.к. при запуске они подгружаются с сервера.
         self.session.query(self.Contacts).delete()
         self.session.commit()
 
-    # Функция добавления контактов
     def add_contact(self, contact):
+        """
+        Функция добавления контактов
+        :param contact:
+        :return:
+        """
         if not self.session.query(self.Contacts).filter_by(name=contact).count():
             contact_row = self.Contacts(contact)
             self.session.add(contact_row)
             self.session.commit()
 
-    # Функция удаления контакта
     def del_contact(self, contact):
+        """
+        Функция удаления контакта
+        :param contact:
+        :return:
+        """
         self.session.query(self.Contacts).filter_by(name=contact).delete()
         self.session.commit()
 
-    # Функция добавления известных пользователей.
-    # Пользователи получаются только с сервера, поэтому таблица очищается.
     def add_users(self, users_list):
+        """
+        Функция добавления известных пользователей.
+        Пользователи получаются только с сервера, поэтому таблица очищается.
+        :param users_list:
+        :return:
+        """
         self.session.query(self.KnownUsers).delete()
         for user in users_list:
             user_row = self.KnownUsers(user)
             self.session.add(user_row)
         self.session.commit()
 
-    # Функция сохраняет сообщения
     def save_message(self, from_user, to_user, message):
+        """
+        Функция сохраняет сообщения
+        :param from_user:
+        :param to_user:
+        :param message:
+        :return:
+        """
         message_row = self.MessageHistory(from_user, to_user, message)
         self.session.add(message_row)
         self.session.commit()
 
-    # Функция возвращает контакты
     def get_contacts(self):
+        """
+        Функция возвращает контакты.
+        :return:
+        """
         return [contact[0] for contact in self.session.query(self.Contacts.name).all()]
 
-    # Функция возвращает список известных пользователей
     def get_users(self):
+        """
+        Функция возвращает список известных пользователей.
+        :return:
+        """
         return [user[0] for user in self.session.query(self.KnownUsers.username).all()]
 
-    # Функция проверяет наличие пользователя в таблице Известных Пользователей
     def check_user(self, user):
+        """
+        Функция проверяет наличие пользователя в таблице Известных Пользователей
+        :param user:
+        :return:
+        """
         if self.session.query(self.KnownUsers).filter_by(username=user).count():
             return True
         else:
             return False
 
-    # Функция проверяет наличие пользователя в таблице Контактов
     def check_contact(self, contact):
+        """
+        Функция проверяет наличие пользователя в таблице Контактов
+        :param contact:
+        :return:
+        """
         if self.session.query(self.Contacts).filter_by(name=contact).count():
             return True
         else:
             return False
 
-    # Функция возвращает историю переписки
     def get_history(self, from_who=None, to_who=None):
+        """
+        Функция возвращает историю переписки
+        :param from_who:
+        :param to_who:
+        :return:
+        """
         query = self.session.query(self.MessageHistory)
         if from_who:
             query = query.filter_by(from_user=from_who)

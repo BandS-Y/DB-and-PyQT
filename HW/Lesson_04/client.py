@@ -148,7 +148,7 @@ class ClientSender(threading.Thread, metaclass=ClientVerifier):
 
         self.print_help()
         while True:
-            command = input('Введите команду: ')
+            command = input('Введите команду (message, help, exit, contacts, edit, history): ')
 
             if command == 'message':
                 self.create_message()
@@ -171,6 +171,8 @@ class ClientSender(threading.Thread, metaclass=ClientVerifier):
             elif command == 'contacts':
                 with database_lock:
                     contacts_list = self.database.get_contacts()
+                    if not contacts_list:
+                        print('список контактов пуст')
                 for contact in contacts_list:
                     print(contact)
 
@@ -389,8 +391,10 @@ def user_list_request(sock, username):
         TIME: time.time(),
         ACCOUNT_NAME: username
     }
+    LOGGER.debug(f'Сформирован запрос {req}')
     send_message(sock, req)
     ans = get_message(sock)
+    LOGGER.debug(f'Получен ответ {ans}')
     if RESPONSE in ans and ans[RESPONSE] == 202:
         return ans[LIST_INFO]
     else:
@@ -456,6 +460,7 @@ def main():
     server_address, server_port, client_name = arg_parser()
 
     """Сообщаем о запуске"""
+    LOGGER.info(f'Консольный мессенджер. Клиентский модуль. Имя пользователя: {client_name}')
     print(f'Консольный мессенджер. Клиентский модуль. Имя пользователя: {client_name}')
 
     # Если имя пользователя не было задано, необходимо запросить пользователя.

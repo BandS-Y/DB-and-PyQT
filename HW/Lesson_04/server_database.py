@@ -15,7 +15,9 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 
 
-# Класс - серверная база данных
+"""
+Класс - серверная база данных
+"""
 class ServerDB:
     Base = declarative_base()
 
@@ -108,15 +110,17 @@ class ServerDB:
         """
         Создаём движок базы данных
         SERVER_DATABASE - sqlite:///server_base_pre.db3
-        echo=False - отключает вывод на экран sql-запросов)
+        echo=False - отключает вывод на экран sql-запросов
         pool_recycle - по умолчанию соединение с БД через 8 часов простоя обрывается
         Чтобы этого не случилось необходимо добавить pool_recycle=7200 (переустановка
         соединения через каждые 2 часа)
         """
-        self.engine = create_engine('sqlite:///server_base.db3', echo=True, pool_recycle=7200,
+        self.engine = create_engine('sqlite:///server_base.db3', echo=False, pool_recycle=7200,
                                     connect_args={'check_same_thread': False})
 
+        # Создаём таблицы
         self.Base.metadata.create_all(self.engine)
+
         # Создаём сессию
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
@@ -300,8 +304,8 @@ class ServerDB:
         user = self.session.query(self.AllUsers).filter_by(login=username).one()
 
         # Запрашиваем его список контактов
-        query = self.session.query(self.UsersContacts, self.AllUsers.name). \
-            filter_by(login=user.id). \
+        query = self.session.query(self.UsersContacts, self.AllUsers.login). \
+            filter_by(user=user.id). \
             join(self.AllUsers, self.UsersContacts.contact == self.AllUsers.id)
 
         # выбираем только имена пользователей и возвращаем их.
