@@ -3,6 +3,10 @@ ORM для клиента
 Декларативный стиль
 """
 
+import sys
+import logging
+
+sys.path.append('../../')
 from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData, DateTime
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
