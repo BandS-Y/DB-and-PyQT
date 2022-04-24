@@ -1,12 +1,12 @@
 import sys
 import logging
 
-sys.path.append('../../')
+sys.path.append('../')
 from PyQt5.QtWidgets import QDialog, QLabel, QComboBox, QPushButton, QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
-logger = logging.getLogger('client_dist')
+LOGGER = logging.getLogger('client')
 
 
 class AddContactDialog(QDialog):
@@ -64,6 +64,8 @@ class AddContactDialog(QDialog):
         users_list.remove(self.transport.username)
         # Добавляем список возможных контактов
         self.selector.addItems(users_list - contacts_list)
+        LOGGER.debug('Заполняем список возможных контактов разницей между '
+                     'всеми пользователями и собственным именем.')
 
     def update_possible_contacts(self):
         """
@@ -76,7 +78,7 @@ class AddContactDialog(QDialog):
         except OSError:
             pass
         else:
-            logger.debug('Обновление списка пользователей с сервера выполнено')
+            LOGGER.debug('Обновление списка пользователей с сервера выполнено')
             self.possible_contacts_update()
 
 

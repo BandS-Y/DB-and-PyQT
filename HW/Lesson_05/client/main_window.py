@@ -14,7 +14,7 @@ from client.transport import ClientTransport
 from client.start_dialog import UserNameDialog
 from common.errors import ServerError
 
-logger = logging.getLogger('client_dist')
+LOGGER = logging.getLogger('client')
 
 
 class ClientMainWindow(QMainWindow):
@@ -187,13 +187,13 @@ class ClientMainWindow(QMainWindow):
             if err.errno:
                 self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
                 self.close()
-            self.messages.critical(self, 'Ошибка', 'Таймаут соединения!')
+            self.messages.critical(self, 'Ошибка', 'Таймаут соединения! (add cont)')
         else:
             self.database.add_contact(new_contact)
             new_contact = QStandardItem(new_contact)
             new_contact.setEditable(False)
             self.contacts_model.appendRow(new_contact)
-            logger.info(f'Успешно добавлен контакт {new_contact}')
+            LOGGER.info(f'Успешно добавлен контакт {new_contact}')
             self.messages.information(self, 'Успех', 'Контакт успешно добавлен.')
 
     def delete_contact_window(self):
@@ -221,11 +221,11 @@ class ClientMainWindow(QMainWindow):
             if err.errno:
                 self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
                 self.close()
-            self.messages.critical(self, 'Ошибка', 'Таймаут соединения!')
+            self.messages.critical(self, 'Ошибка', 'Таймаут соединения! (del cont)')
         else:
             self.database.del_contact(selected)
             self.clients_list_update()
-            logger.info(f'Успешно удалён контакт {selected}')
+            LOGGER.info(f'Успешно удалён контакт {selected}')
             self.messages.information(self, 'Успех', 'Контакт успешно удалён.')
             item.close()
             # Если удалён активный пользователь, то деактивируем поля ввода.
@@ -251,13 +251,13 @@ class ClientMainWindow(QMainWindow):
             if err.errno:
                 self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
                 self.close()
-            self.messages.critical(self, 'Ошибка', 'Таймаут соединения!')
+            self.messages.critical(self, 'Ошибка', 'Таймаут соединения! (send mes)')
         except (ConnectionResetError, ConnectionAbortedError):
             self.messages.critical(self, 'Ошибка', 'Потеряно соединение с сервером!')
             self.close()
         else:
             self.database.save_message(self.current_chat, 'out', message_text)
-            logger.debug(f'Отправлено сообщение для {self.current_chat}: {message_text}')
+            LOGGER.debug(f'Отправлено сообщение для {self.current_chat}: {message_text}')
             self.history_list_update()
 
     @pyqtSlot(str)

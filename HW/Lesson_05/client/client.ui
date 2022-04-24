@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Чат Программа alpha release</string>
+   <string>Чат Программа v 0.0.2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label_contacts">
@@ -38,7 +38,7 @@
      <rect>
       <x>10</x>
       <y>450</y>
-      <width>121</width>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -49,7 +49,7 @@
    <widget class="QPushButton" name="btn_remove_contact">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>160</x>
       <y>450</y>
       <width>121</width>
       <height>31</height>
@@ -100,7 +100,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>251</width>
+      <width>271</width>
       <height>411</height>
      </rect>
     </property>
@@ -118,9 +118,9 @@
    <widget class="QPushButton" name="btn_send">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>570</x>
       <y>450</y>
-      <width>131</width>
+      <width>171</width>
       <height>31</height>
      </rect>
     </property>
@@ -131,7 +131,7 @@
    <widget class="QPushButton" name="btn_clear">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>450</y>
       <width>131</width>
       <height>31</height>
@@ -148,7 +148,7 @@
      <x>0</x>
      <y>0</y>
      <width>756</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

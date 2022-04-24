@@ -77,7 +77,7 @@ class Ui_MainClientWindow(object):
 
     def retranslateUi(self, MainClientWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainClientWindow.setWindowTitle(_translate("MainClientWindow", "Чат Программа alpha release"))
+        MainClientWindow.setWindowTitle(_translate("MainClientWindow", "Чат Программа"))
         self.label_contacts.setText(_translate("MainClientWindow", "Список контактов:"))
         self.btn_add_contact.setText(_translate("MainClientWindow", "Добавить контакт"))
         self.btn_remove_contact.setText(_translate("MainClientWindow", "Удалить контакт"))

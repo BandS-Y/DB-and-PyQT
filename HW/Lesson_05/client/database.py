@@ -6,17 +6,18 @@ ORM для клиента
 import sys
 import logging
 
-sys.path.append('../../')
+sys.path.append('../')
 from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData, DateTime
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from common.variables import *
 import datetime
 
-"""
-Класс - база данных сервера.
-"""
+
 class ClientDatabase:
+    """
+    Класс - база данных сервера.
+    """
     Base = declarative_base()
 
     class KnownUsers(Base):

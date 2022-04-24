@@ -2,21 +2,28 @@ import logging
 import logs.config_client_log
 import argparse
 import sys
+
+# sys.path.append('../')
+
 from PyQt5.QtWidgets import QApplication
 
-from common.variables import *
-from common.errors import ServerError
-from common.decos import log
 from client.database import ClientDatabase
 from client.transport import ClientTransport
 from client.main_window import ClientMainWindow
 from client.start_dialog import UserNameDialog
+from common.variables import *
+from common.errors import ServerError
+from common.decos import log
+
 
 # Инициализация клиентского логера
-logger = logging.getLogger('client_dist')
+LOGGER = logging.getLogger('client')
+
+# Версия программы клиента
+version = 'v 0.0.2'
 
 
-# Парсер аргументов коммандной строки
+# Парсер аргументов командной строки
 @log
 def arg_parser():
     parser = argparse.ArgumentParser()
@@ -30,7 +37,7 @@ def arg_parser():
 
     # проверим подходящий номер порта
     if not 1023 < server_port < 65536:
-        logger.critical(
+        LOGGER.critical(
             f'Попытка запуска клиента с неподходящим номером порта: {server_port}. '
             f'Допустимы адреса с 1024 до 65535. Клиент завершается.')
         exit(1)
@@ -40,10 +47,10 @@ def arg_parser():
 
 # Основная функция клиента
 if __name__ == '__main__':
-    # Загружаем параметы коммандной строки
+    # Загружаем параметры командной строки
     server_address, server_port, client_name = arg_parser()
 
-    # Создаём клиентокое приложение
+    # Создаём клиентское приложение
     client_app = QApplication(sys.argv)
 
     # Если имя пользователя не было указано в командной строке, то запросим его
@@ -59,8 +66,8 @@ if __name__ == '__main__':
             exit(0)
 
     # Записываем логи
-    logger.info(
-        f'Запущен клиент с парамертами: адрес сервера: {server_address} , '
+    LOGGER.info(
+        f'Запущен клиент с параметрами: адрес сервера: {server_address} , '
         f'порт: {server_port}, имя пользователя: {client_name}')
 
     # Создаём объект базы данных
@@ -78,7 +85,7 @@ if __name__ == '__main__':
     # Создаём GUI
     main_window = ClientMainWindow(database, transport)
     main_window.make_connection(transport)
-    main_window.setWindowTitle(f'Чат Программа alpha release - {client_name}')
+    main_window.setWindowTitle(f'Чат Программа {version} - {client_name}')
     client_app.exec_()
 
     # Раз графическая оболочка закрылась, закрываем транспорт

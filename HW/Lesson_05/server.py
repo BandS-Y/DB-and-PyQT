@@ -4,22 +4,21 @@ import socket
 import argparse
 import logging
 import select
-from common.variables import DEFAULT_PORT, ACTION, TIME, \
+from common.variables import ACTION, TIME, \
     USER, ACCOUNT_NAME, SENDER, PRESENCE, ERROR, MESSAGE, \
     MESSAGE_TEXT, RESPONSE_400, DESTINATION, RESPONSE_200, EXIT,\
     GET_CONTACTS, RESPONSE_202, LIST_INFO, ADD_CONTACT, REMOVE_CONTACT, \
     USERS_REQUEST
 from common.utils import get_message, send_message
-from decos import log
-from metaclasses import ServerVerifier
-from descrptrs import Port
+from common.decos import log
+from HW.Lesson_05.metaclasses import ServerVerifier
+from HW.Lesson_05.descrptrs import Port
 from server_database import ServerDB
 import threading
 import os
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QTimer
 from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
 import configparser   # https://docs.python.org/3/library/configparser.html
 
 # Инициализация логирования сервера.
