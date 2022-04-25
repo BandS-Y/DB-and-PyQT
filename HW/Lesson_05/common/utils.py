@@ -1,10 +1,14 @@
 """Утилиты"""
 
 import sys
+import os
+# sys.path.append('../')
+sys.path.append(os.path.join(os.getcwd(),'..'))
 import json
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
-from errors import IncorrectDataRecivedError, NonDictInputError
-from decos import log
+from common.errors import IncorrectDataRecivedError, NonDictInputError
+from common.decos import log
+
 
 
 @log
