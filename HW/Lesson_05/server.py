@@ -8,7 +8,7 @@ from common.variables import ACTION, TIME, \
     USER, ACCOUNT_NAME, SENDER, PRESENCE, ERROR, MESSAGE, \
     MESSAGE_TEXT, RESPONSE_400, DESTINATION, RESPONSE_200, EXIT,\
     GET_CONTACTS, RESPONSE_202, LIST_INFO, ADD_CONTACT, REMOVE_CONTACT, \
-    USERS_REQUEST
+    USERS_REQUEST, DEFAULT_PORT
 from common.utils import get_message, send_message
 from common.decos import log
 from HW.Lesson_05.metaclasses import ServerVerifier
@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QTimer
 from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
 import configparser   # https://docs.python.org/3/library/configparser.html
+
 
 # Инициализация логирования сервера.
 LOGGER = logging.getLogger('server')
@@ -122,8 +123,14 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                 DESTINATION in message and TIME in message \
                 and SENDER in message and MESSAGE_TEXT in message\
                 and self.names[message[SENDER]] == client:
-            self.messages.append(message)
-            self.database.process_message(message[SENDER], message[DESTINATION])
+            if message[DESTINATION] in self.names:
+                self.messages.append(message)
+                self.database.process_message(message[SENDER], message[DESTINATION])
+                send_message(client, RESPONSE_200)
+            else:
+                response = RESPONSE_400
+                response[ERROR] = 'Пользователь не зарегистрирован на сервере.'
+                send_message(client, response)
             return
 
         # Если клиент выходит
@@ -166,8 +173,7 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                 and ACCOUNT_NAME in message \
                 and self.names[message[ACCOUNT_NAME]] == client:
             response = RESPONSE_202
-            response[LIST_INFO] = [user[0]
-                                   for user in self.database.users_list()]
+            response[LIST_INFO] = [user[0] for user in self.database.users_list()]
             send_message(client, response)
 
         # Иначе отдаём Bad request
@@ -213,6 +219,7 @@ class Server(threading.Thread, metaclass=ServerVerifier):
         self.sock.listen()
 
     def run(self):
+        global new_connection
 
         # Инициализация Сокета
         self.init_socket()
@@ -257,6 +264,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                                 del self.names[name]
                                 break
                         self.clients.remove(client_with_message)
+                        with conflag_lock:
+                            new_connection = True
 
             # Если есть сообщения, обрабатываем каждое.
             for i in self.messages:
@@ -267,6 +276,8 @@ class Server(threading.Thread, metaclass=ServerVerifier):
                     self.clients.remove(self.names[i[DESTINATION]])
                     self.database.user_logout(i[DESTINATION])
                     del self.names[i[DESTINATION]]
+                    with conflag_lock:
+                        new_connection = True
             self.messages.clear()
 
 
@@ -276,15 +287,24 @@ def main():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     config.read(f"{dir_path}/{'server.ini'}")
 
+    # Если конфиг файл загружен правильно, запускаемся, иначе конфиг по умолчанию.
+    if 'SETTINGS' not in config:
+        config.add_section('SETTINGS')
+        config.set('SETTINGS', 'Default_port', str(DEFAULT_PORT))
+        config.set('SETTINGS', 'Listen_Address', '')
+        config.set('SETTINGS', 'Database_path', '')
+        config.set('SETTINGS', 'Database_file', 'server_database.db3')
+
     # Загрузка параметров командной строки, если нет параметров, то задаём значения по умолчанию
     listen_address, listen_port = arg_parser(
         config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
 
     # Инициализация базы данных
     database = ServerDB()
-        # os.path.join(
-        #     config['SETTINGS']['Database_path'],
-        #     config['SETTINGS']['Database_file']))
+    # database = ServerDB(
+    #     os.path.join(
+    #         config['SETTINGS']['Database_path'],
+    #         config['SETTINGS']['Database_file']))
 
     # Создание экземпляра класса - сервера, подключение к БД, запуск
     server = Server(listen_address, listen_port, database)
