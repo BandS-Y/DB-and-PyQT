@@ -1,17 +1,22 @@
 """
 В основе метода библиотека dis - анализ кода с помощью его дизассемблирования
-(разбор кода на составляющие: в нашем случае - на атрибуты и методы класса)
+(разбор кода на составляющие: в нашем случае - на атрибуты и методы класса).
 https://docs.python.org/3/library/dis.html
 """
 
 import dis
 
 
-# Метакласс для проверки соответствия сервера:
-from pprint import pprint
+# from pprint import pprint
 
 
 class ServerVerifier(type):
+    '''
+    Метакласс, проверяющий, что в результирующем классе нет клиентских
+    вызовов таких как: connect. Также проверяется, что серверный
+    сокет является TCP и работает по IPv4 протоколу.
+    '''
+
     def __init__(cls, clsname, bases, clsdict):
         # clsname - экземпляр метакласса - Server
         # bases - кортеж базовых классов - ()
@@ -26,12 +31,12 @@ class ServerVerifier(type):
         # 'process_client_message': <function Server.process_client_message at 0x000000DACCE3E598>}
 
         # Список методов, которые используются в функциях класса:
-        methods = []    # получаем с помощью 'LOAD_GLOBAL'
+        methods = []  # получаем с помощью 'LOAD_GLOBAL'
         # Обычно методы, обёрнутые декораторами попадают
         # не в 'LOAD_GLOBAL', а в 'LOAD_METHOD'
         methods_2 = []  # получаем с помощью 'LOAD_METHOD'
         # Атрибуты, используемые в функциях классов
-        attrs = []      # получаем с помощью 'LOAD_ATTR'
+        attrs = []  # получаем с помощью 'LOAD_ATTR'
         # перебираем ключи
         for func in clsdict:
             # Пробуем
@@ -78,7 +83,6 @@ class ServerVerifier(type):
         # pprint(attrs)
         # print(50*'-')
 
-
         # Если обнаружено использование недопустимого метода connect, вызываем исключение:
         if 'connect' in methods:
             raise TypeError('Использование метода connect недопустимо в серверном классе')
@@ -89,8 +93,13 @@ class ServerVerifier(type):
         super().__init__(clsname, bases, clsdict)
 
 
-# Метакласс для проверки корректности клиентов:
 class ClientVerifier(type):
+    '''
+    Метакласс, проверяющий, что в результирующем классе нет серверных
+    вызовов таких как: accept, listen. Также проверяется, что сокет не
+    создаётся внутри конструктора класса.
+    '''
+
     def __init__(cls, clsname, bases, clsdict):
         # Список методов, которые используются в функциях класса:
         methods = []
@@ -98,7 +107,7 @@ class ClientVerifier(type):
             # Пробуем
             try:
                 ret = dis.get_instructions(clsdict[func])
-                # Если не функция то ловим исключение
+                # Если не функция, то ловим исключение
             except TypeError:
                 pass
             else:
