@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QDialog, QLabel, QComboBox, QPushButton, QApplication
+from PyQt5.QtWidgets import QDialog, QLabel, QComboBox, QPushButton, \
+    QApplication
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
@@ -14,7 +15,7 @@ class DelUserDialog(QDialog):
         self.server = server
 
         self.setFixedSize(350, 120)
-        self.setWindowTitle('Удаление пользователя')
+        self.setWindowTitle('Удаление пользователя c сервера')
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setModal(True)
 
@@ -59,7 +60,7 @@ class DelUserDialog(QDialog):
 if __name__ == '__main__':
     app = QApplication([])
     from server_database import ServerDB
-    database = ServerDB('../server/server_database.db3')
+    database = ServerDB('../client/server_database.db3')
     import os
     import sys
     path1 = os.path.join(os.getcwd(), '..')

@@ -8,8 +8,10 @@ import os
 # from server.config_window import ConfigWindow
 from server.add_user import RegisterUser
 from server.remove_user import DelUserDialog
-
+# from add_user import RegisterUser
+# from remove_user import DelUserDialog
 # GUI - Создание таблицы QModel, для отображения в окне программы.
+
 def gui_create_model(database):
     list_users = database.active_users_list()
     list_table = QStandardItemModel()

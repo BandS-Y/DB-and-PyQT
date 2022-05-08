@@ -19,6 +19,7 @@ from common.variables import ACTION, TIME, \
     USERS_REQUEST, RESPONSE_511, DATA, RESPONSE, PUBLIC_KEY, \
     MAX_CONNECTIONS, PUBLIC_KEY_REQUEST, RESPONSE_205
 from common.utils import get_message, send_message
+# from common.decos import login_required
 
 # Флаг, что был подключён новый пользователь, нужен чтобы не нагружать BD
 # постоянными запросами на обновление

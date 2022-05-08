@@ -65,8 +65,8 @@ if __name__ == '__main__':
 
     # Если имя пользователя не было указано в командной строке, то запросим его
     # ввести имя и пароль
+    start_dialog = UserNameDialog()
     if not client_name or not client_passwd:
-        start_dialog = UserNameDialog()
         client_app.exec_()
         # Если пользователь ввёл имя и нажал ОК, то сохраняем ведённое и удаляем объект.
         # Иначе - выходим
@@ -74,7 +74,6 @@ if __name__ == '__main__':
             client_name = start_dialog.client_name.text()
             client_passwd = start_dialog.client_passwd.text()
             LOGGER.debug(f'Using USERNAME = {client_name}, PASSWD = {client_passwd}.')
-            del start_dialog
         else:
             exit(0)
 
@@ -113,8 +112,11 @@ if __name__ == '__main__':
     transport.setDaemon(True)
     transport.start()
 
+    # Удалим объект диалога за ненадобностью
+    del start_dialog
+
     # Создаём GUI
-    main_window = ClientMainWindow(database, transport)
+    main_window = ClientMainWindow(database, transport, keys)
     main_window.make_connection(transport)
     main_window.setWindowTitle(f'Чат Программа {version} - {client_name}')
     client_app.exec_()

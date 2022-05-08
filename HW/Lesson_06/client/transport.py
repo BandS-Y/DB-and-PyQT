@@ -27,7 +27,7 @@ class ClientTransport(threading.Thread, QObject):
     Класс - Транспорт, отвечает за взаимодействие с сервером
     """
     # Сигналы новое сообщение и потеря соединения
-    new_message = pyqtSignal(str)
+    new_message = pyqtSignal(dict)
     message_205 = pyqtSignal()
     connection_lost = pyqtSignal()
 
@@ -176,8 +176,8 @@ class ClientTransport(threading.Thread, QObject):
                 and message[DESTINATION] == self.username:
             LOGGER.debug(f'Получено сообщение от пользователя {message[SENDER]}:'
                          f'{message[MESSAGE_TEXT]}')
-            self.database.save_message(message[SENDER], 'in', message[MESSAGE_TEXT])
-            self.new_message.emit(message[SENDER])
+            # self.database.save_message(message[SENDER], 'in', message[MESSAGE_TEXT])
+            self.new_message.emit(message)
 
     # Функция, обновляющая контакт - лист с сервера
     def contacts_list_update(self):
@@ -293,7 +293,7 @@ class ClientTransport(threading.Thread, QObject):
     def run(self):
         LOGGER.debug('Запущен процесс - приёмник сообщений с сервера.')
         while self.running:
-            # Отдыхаем секунду и снова пробуем захватить сокет.
+            # Ожидаем секунду и снова пробуем захватить сокет.
             # Если не сделать тут задержку, то отправка может
             # достаточно долго ждать освобождения сокета.
             time.sleep(1)

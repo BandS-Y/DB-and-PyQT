@@ -16,7 +16,7 @@ PATH = os.path.join(PATH, 'client.log')
 # создаём потоки вывода логов
 STREAM_HANDLER = logging.StreamHandler(sys.stderr)
 STREAM_HANDLER.setFormatter(CLIENT_FORMATTER)
-STREAM_HANDLER.setLevel(logging.ERROR)
+STREAM_HANDLER.setLevel(logging.INFO)
 LOG_FILE = logging.FileHandler(PATH, encoding='utf8')
 LOG_FILE.setFormatter(CLIENT_FORMATTER)
 

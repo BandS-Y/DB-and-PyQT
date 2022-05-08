@@ -152,7 +152,8 @@ class ServerDB:
         # Запрос в таблицу пользователей на наличие там пользователя с таким именем
         rez = self.session.query(self.AllUsers).filter_by(login=username)
         # print(type(rez))
-        # Если имя пользователя уже присутствует в таблице, обновляем время последнего входа
+        # Если имя пользователя уже присутствует в таблице, обновляем время
+        # последнего входа
         if rez.count():
             user = rez.first()
             user.last_conn = datetime.datetime.now()
@@ -226,7 +227,7 @@ class ServerDB:
 
         user = self.session.query(self.AllUsers).filter_by(login=name).first()
         self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
-        self.session.query(self.LoginHistory).filter_by(name=user.id).delete()
+        self.session.query(self.LoginHistory).filter_by(id=user.id).delete()
         self.session.query(self.UsersContacts).filter_by(user=user.id).delete()
         self.session.query(
             self.UsersContacts).filter_by(
@@ -461,7 +462,7 @@ class ServerDB:
 
 # Отладка
 if __name__ == '__main__':
-    db = ServerDB('../server/server_database.db3')
+    db = ServerDB('../client/server_database.db3')
 
     # Выполняем "подключение" пользователя
     db.user_login('client_1', '192.168.1.4', 7778)
