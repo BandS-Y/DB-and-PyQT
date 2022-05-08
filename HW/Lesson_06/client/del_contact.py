@@ -18,14 +18,14 @@ class DelContactDialog(QDialog):
         self.database = database
 
         self.setFixedSize(350, 120)
-        self.setWindowTitle('Выберите контакт для удаления:')
+        self.setWindowTitle('Выберите контакт для удаления')
         # Удаляем диалог, если окно было закрыто преждевременно
         self.setAttribute(Qt.WA_DeleteOnClose)
         # Делаем это окно модальным (т.е. поверх других)
         self.setModal(True)
 
         self.selector_label = QLabel('Выберите контакт для удаления:', self)
-        self.selector_label.setFixedSize(200, 20)
+        self.selector_label.setFixedSize(250, 20)
         self.selector_label.move(10, 0)
 
         self.selector = QComboBox(self)
@@ -36,11 +36,11 @@ class DelContactDialog(QDialog):
 
         self.btn_ok = QPushButton('Удалить', self)
         self.btn_ok.setFixedSize(100, 30)
-        self.btn_ok.move(230, 20)
+        self.btn_ok.move(230, 30)
 
         self.btn_cancel = QPushButton('Отмена', self)
         self.btn_cancel.setFixedSize(100, 30)
-        self.btn_cancel.move(230, 60)
+        self.btn_cancel.move(230, 70)
         self.btn_cancel.clicked.connect(self.close)
 
 

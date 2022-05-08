@@ -1,5 +1,6 @@
 import sys
 import logging
+from binhex import binhex
 
 sys.path.append('../')
 from PyQt5.QtWidgets import QDialog, QLabel, QComboBox, QPushButton, QApplication
@@ -19,14 +20,14 @@ class AddContactDialog(QDialog):
         self.database = database
 
         self.setFixedSize(350, 120)
-        self.setWindowTitle('Выберите контакт для добавления:')
+        self.setWindowTitle('Выберите контакт для добавления')
         # Удаляем диалог, если окно было закрыто преждевременно
         self.setAttribute(Qt.WA_DeleteOnClose)
         # Делаем это окно модальным (т.е. поверх других)
         self.setModal(True)
 
         self.selector_label = QLabel('Выберите контакт для добавления:', self)
-        self.selector_label.setFixedSize(200, 20)
+        self.selector_label.setFixedSize(255, 20)
         self.selector_label.move(10, 0)
 
         self.selector = QComboBox(self)
@@ -34,16 +35,16 @@ class AddContactDialog(QDialog):
         self.selector.move(10, 30)
 
         self.btn_refresh = QPushButton('Обновить список', self)
-        self.btn_refresh.setFixedSize(100, 30)
-        self.btn_refresh.move(60, 60)
+        self.btn_refresh.setFixedSize(130, 30)
+        self.btn_refresh.move(50, 60)
 
         self.btn_ok = QPushButton('Добавить', self)
         self.btn_ok.setFixedSize(100, 30)
-        self.btn_ok.move(230, 20)
+        self.btn_ok.move(230, 30)
 
         self.btn_cancel = QPushButton('Отмена', self)
         self.btn_cancel.setFixedSize(100, 30)
-        self.btn_cancel.move(230, 60)
+        self.btn_cancel.move(230, 70)
         self.btn_cancel.clicked.connect(self.close)
 
         # Заполняем список возможных контактов
@@ -53,14 +54,17 @@ class AddContactDialog(QDialog):
 
     def possible_contacts_update(self):
         """
-        Заполняем список возможных контактов разницей между всеми пользователями и собственным именем.
+        Метод заполнения списка возможных контактов.
+        Создаёт список всех зарегистрированных пользователей
+        за исключением уже добавленных в контакты и самого себя.
         :return:
         """
         self.selector.clear()
         # множества всех контактов и контактов клиента
         contacts_list = set(self.database.get_contacts())
         users_list = set(self.database.get_users())
-        # Удалим сами себя из списка пользователей, чтобы нельзя было добавить самого себя
+        # Удалим сами себя из списка пользователей, чтобы нельзя было добавить
+        # самого себя
         users_list.remove(self.transport.username)
         # Добавляем список возможных контактов
         self.selector.addItems(users_list - contacts_list)
@@ -83,12 +87,16 @@ class AddContactDialog(QDialog):
 
 
 # отладка
+def binascii(param):
+    pass
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     from database import ClientDatabase
     database = ClientDatabase('test1')
     from transport import ClientTransport
-    transport = ClientTransport(7777, '127.0.0.1', database, 'test1')
+    transport = ClientTransport(7777, '127.0.0.1', database, 'test1', '123', '123')
     window = AddContactDialog(transport, database)
     window.show()
     app.exec_()

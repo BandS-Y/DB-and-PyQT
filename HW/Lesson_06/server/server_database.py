@@ -224,7 +224,7 @@ class ServerDB:
         :return:
         """
 
-        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        user = self.session.query(self.AllUsers).filter_by(login=name).first()
         self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
         self.session.query(self.LoginHistory).filter_by(name=user.id).delete()
         self.session.query(self.UsersContacts).filter_by(user=user.id).delete()
@@ -232,7 +232,7 @@ class ServerDB:
             self.UsersContacts).filter_by(
             contact=user.id).delete()
         self.session.query(self.UsersHistory).filter_by(user=user.id).delete()
-        self.session.query(self.AllUsers).filter_by(name=name).delete()
+        self.session.query(self.AllUsers).filter_by(login=name).delete()
         self.session.commit()
 
     def get_hash(self, name):
@@ -242,7 +242,7 @@ class ServerDB:
         :return:
         """
 
-        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        user = self.session.query(self.AllUsers).filter_by(login=name).first()
         return user.passwd_hash
 
     def get_pubkey(self, name):
@@ -252,7 +252,7 @@ class ServerDB:
         :return:
         """
 
-        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        user = self.session.query(self.AllUsers).filter_by(login=name).first()
         return user.pubkey
 
     def check_user(self, name):
@@ -262,7 +262,7 @@ class ServerDB:
         :return:
         """
 
-        if self.session.query(self.AllUsers).filter_by(name=name).count():
+        if self.session.query(self.AllUsers).filter_by(login=name).count():
             return True
         else:
             return False
