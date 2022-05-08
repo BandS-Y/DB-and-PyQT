@@ -8,14 +8,15 @@ import logging
 import socket
 import select
 
+
 sys.path.append('../')
-from metaclasses import ServerVerifier
+from common.metaclasses import ServerVerifier
 from common.descrptrs import Port
 from common.variables import ACTION, TIME, \
     USER, ACCOUNT_NAME, SENDER, PRESENCE, ERROR, MESSAGE, \
     MESSAGE_TEXT, RESPONSE_400, DESTINATION, RESPONSE_200, EXIT, \
     GET_CONTACTS, RESPONSE_202, LIST_INFO, ADD_CONTACT, REMOVE_CONTACT, \
-    USERS_REQUEST, DEFAULT_PORT, RESPONSE_511, DATA, RESPONSE, PUBLIC_KEY, \
+    USERS_REQUEST, RESPONSE_511, DATA, RESPONSE, PUBLIC_KEY, \
     MAX_CONNECTIONS, PUBLIC_KEY_REQUEST, RESPONSE_205
 from common.utils import get_message, send_message
 
@@ -27,13 +28,15 @@ conflag_lock = threading.Lock()
 # Инициализация логирования сервера.
 LOGGER = logging.getLogger('server')
 
+'''
+Основной класс сервера. Принимает соединения, словари - пакеты
+от клиентов, обрабатывает поступающие сообщения.
+Работает в качестве отдельного потока.
+'''
+
 
 class Server(threading.Thread, metaclass=ServerVerifier):
-    """
-    Основной класс сервера. Принимает соединения, словари - пакеты
-    от клиентов, обрабатывает поступающие сообщения.
-    Работает в качестве отдельного потока.
-    """
+
     port = Port()
 
     def __init__(self, listen_address, listen_port, database):

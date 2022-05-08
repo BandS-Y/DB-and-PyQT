@@ -1,25 +1,18 @@
 """Программа-сервер"""
 import sys
-
 import argparse
 import logging
-
-from common.variables import ACTION, TIME, \
-    USER, ACCOUNT_NAME, SENDER, PRESENCE, ERROR, MESSAGE, \
-    MESSAGE_TEXT, RESPONSE_400, DESTINATION, RESPONSE_200, EXIT, \
-    GET_CONTACTS, RESPONSE_202, LIST_INFO, ADD_CONTACT, REMOVE_CONTACT, \
-    USERS_REQUEST, DEFAULT_PORT
-
+from common.variables import DEFAULT_PORT
 from common.decos import log
 
-
-from server_database import ServerDB
+from server.server_database import ServerDB
 import threading
 import os
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QTimer
-from server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
+from server.server_gui import MainWindow, gui_create_model, HistoryWindow, create_stat_model, ConfigWindow
 import configparser  # https://docs.python.org/3/library/configparser.html
+from server.core import Server
 
 # Инициализация логирования сервера.
 LOGGER = logging.getLogger('server')
@@ -57,12 +50,11 @@ def arg_parser(default_port, default_address):
 """
 
 
-
 def main():
     # Загрузка файла конфигурации сервера
     config = configparser.ConfigParser()
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    config.read(f"{dir_path}/{'server.ini'}")
+    config.read(f"{dir_path}server/{'server.ini'}")
 
     # Если конфиг файл загружен правильно, запускаемся, иначе конфиг по умолчанию.
     if 'SETTINGS' not in config:
@@ -70,18 +62,18 @@ def main():
         config.set('SETTINGS', 'Default_port', str(DEFAULT_PORT))
         config.set('SETTINGS', 'Listen_Address', '')
         config.set('SETTINGS', 'Database_path', '')
-        config.set('SETTINGS', 'Database_file', 'server_database.db3')
+        config.set('SETTINGS', 'Database_file', 'server/server_database.db3')
 
     # Загрузка параметров командной строки, если нет параметров, то задаём значения по умолчанию
-    listen_address, listen_port = arg_parser(
+    listen_address, listen_port, gui_flag = arg_parser(
         config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
 
     # Инициализация базы данных
-    database = ServerDB()
-    # database = ServerDB(
-    #     os.path.join(
-    #         config['SETTINGS']['Database_path'],
-    #         config['SETTINGS']['Database_file']))
+    # database = ServerDB()
+    database = ServerDB(
+        os.path.join(
+            config['SETTINGS']['Database_path'],
+            config['SETTINGS']['Database_file']))
 
     # Создание экземпляра класса - сервера, подключение к БД, запуск
     server = Server(listen_address, listen_port, database)
@@ -91,7 +83,7 @@ def main():
 
     # Создаём графическое окружение для сервера:
     server_app = QApplication(sys.argv)
-    main_window = MainWindow()
+    main_window = MainWindow(database, server, config)
 
     # Инициализируем параметры в окна
     main_window.statusBar().showMessage('Server Working')
@@ -146,7 +138,7 @@ def main():
             if 1023 < port < 65536:
                 config['SETTINGS']['Default_port'] = str(port)
                 print(port)
-                with open('server.ini', 'w') as conf:
+                with open('server/server.ini', 'w') as conf:
                     config.write(conf)
                     message.information(
                         config_window, 'OK', 'Настройки успешно сохранены!')

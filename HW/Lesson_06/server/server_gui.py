@@ -1,10 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QLabel, QTableView, QDialog, QPushButton, \
-    QLineEdit, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QLabel, QTableView,\
+    QDialog, QPushButton, QLineEdit, QFileDialog, QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 import os
-
+# from server.stat_window import StatWindow
+# from server.config_window import ConfigWindow
+from server.add_user import RegisterUser
+from server.remove_user import DelUserDialog
 
 # GUI - Создание таблицы QModel, для отображения в окне программы.
 def gui_create_model(database):
@@ -51,8 +54,14 @@ def create_stat_model(database):
 
 # Класс основного окна
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, database, server, config):
         super().__init__()
+
+        # База данных сервера
+        self.database = database
+
+        self.server_thread = server
+        self.config = config
         self.initUI()
 
     def initUI(self):
@@ -70,6 +79,12 @@ class MainWindow(QMainWindow):
         # Кнопка настроек сервера
         self.config_btn = QAction('Настройки сервера', self)
 
+        # Кнопка регистрации пользователя
+        self.register_btn = QAction('Регистрация пользователя', self)
+
+        # Кнопка удаления пользователя
+        self.remove_btn = QAction('Удаление пользователя', self)
+
         # Статусбар
         # dock widget
         self.statusBar()
@@ -80,11 +95,13 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(self.refresh_button)
         self.toolbar.addAction(self.show_history_button)
         self.toolbar.addAction(self.config_btn)
+        self.toolbar.addAction(self.register_btn)
+        self.toolbar.addAction(self.remove_btn)
 
         # Настройки геометрии основного окна
         # Поскольку работать с динамическими размерами мы не умеем, и мало времени на изучение, размер окна фиксирован.
-        self.setFixedSize(800, 600)
-        self.setWindowTitle('Messaging Server v 0.0.2')
+        self.setFixedSize(1000, 600)
+        self.setWindowTitle('Messaging Server v 0.0.3')
 
         # Надпись о том, что ниже список подключённых клиентов
         self.label = QLabel('Список подключённых клиентов:', self)
@@ -96,8 +113,24 @@ class MainWindow(QMainWindow):
         self.active_clients_table.move(10, 55)
         self.active_clients_table.setFixedSize(780, 400)
 
+        # Связываем кнопки с процедурами
+        self.register_btn.triggered.connect(self.reg_user)
+        self.remove_btn.triggered.connect(self.rem_user)
+
         # Последним параметром отображаем окно.
         self.show()
+
+    def reg_user(self):
+        '''Метод создающий окно регистрации пользователя.'''
+        global reg_window
+        reg_window = RegisterUser(self.database, self.server_thread)
+        reg_window.show()
+
+    def rem_user(self):
+        '''Метод создающий окно удаления пользователя.'''
+        global rem_window
+        rem_window = DelUserDialog(self.database, self.server_thread)
+        rem_window.show()
 
 
 # Класс окна с историей пользователей
@@ -207,7 +240,9 @@ class ConfigWindow(QDialog):
 
         self.show()
 
-# функция запуска и заполнения главного окна
+
+# Далее для тестов окна.
+# Функция запуска и заполнения главного окна.
 def main_win():
     app = QApplication(sys.argv)
     main_window = MainWindow()
@@ -224,7 +259,7 @@ def main_win():
     main_window.active_clients_table.resizeColumnsToContents()
     app.exec_()
 
-# функция запуска и заполнения  окна истории
+# функция запуска и заполнения окна истории
 def history_win():
     app = QApplication(sys.argv)
     window = HistoryWindow()
