@@ -215,7 +215,7 @@ class ClientTransport(threading.Thread, QObject):
         else:
             LOGGER.error('Не удалось обновить список известных пользователей.')
 
-    # Mетод запрашивающий с сервера публичный ключ пользователя.
+    # Метод запрашивающий с сервера публичный ключ пользователя.
     def key_request(self, user):
         LOGGER.debug(f'Запрос публичного ключа для {user}')
         req = {
