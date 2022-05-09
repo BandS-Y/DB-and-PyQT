@@ -9325,3 +9325,4 @@ socket.timeout: timed out
 2022-05-08 21:36:16,843 DEBUG decos.py Была вызвана функция send_message c параметрами (<socket.socket fd=21, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 42370), raddr=('127.0.0.1', 7777)>, {'action': 'exit', 'time': 1652020576.8434458, 'account_name': 'test2'}), {}. Вызов из модуля common.utils
 2022-05-08 21:36:16,844 DEBUG transport.py Транспорт завершает работу.
 2022-05-08 21:36:35,830 DEBUG transport.py Запрос списка известных пользователей test1
+2022-05-08 21:44:28,055 DEBUG transport.py Удаление контакта test2

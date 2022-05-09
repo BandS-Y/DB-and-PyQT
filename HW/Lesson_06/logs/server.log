@@ -1594,3 +1594,20 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 2022-05-08 21:35:24,320 INFO core.py Отправлено сообщение пользователю test2 от пользователя test1.
 2022-05-08 21:36:14,053 INFO core.py Клиент ('127.0.0.1', 42370) отключился от сервера.
 2022-05-08 21:36:14,053 DEBUG decos.py Была вызвана функция send_message c параметрами (<socket.socket fd=25, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 42372)>, {'response': 205}), {}. Вызов из модуля common.utils
+2022-05-08 21:44:43,982 DEBUG decos.py Была вызвана функция get_message c параметрами (<socket.socket fd=25, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 42372)>,), {}. Вызов из модуля common.utils
+2022-05-08 21:44:43,983 DEBUG core.py Getting data from client exception.
+Traceback (most recent call last):
+  File "/home/yura/Documents/project/GeekBrains/DB_PyQT/HW/Lesson_06/server/core.py", line 384, in run
+    self.process_client_message(get_message(client_with_message),
+  File "/home/yura/Documents/project/GeekBrains/DB_PyQT/HW/Lesson_06/common/decos.py", line 23, in log_saver
+    ret = func_to_log(*args, **kwargs)
+  File "/home/yura/Documents/project/GeekBrains/DB_PyQT/HW/Lesson_06/common/utils.py", line 25, in get_message
+    response = json.loads(json_response)
+  File "/usr/lib/python3.8/json/__init__.py", line 357, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3.8/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/lib/python3.8/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2022-05-08 21:44:43,984 INFO core.py Клиент ('127.0.0.1', 42372) отключился от сервера.

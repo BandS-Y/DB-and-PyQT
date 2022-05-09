@@ -15,7 +15,7 @@ import logs.config_client_log
 def log(func_to_log):
     """Функция-декоратор"""
     def log_saver(*args, **kwargs):
-        logger_name = 'server' if 'server.py' in sys.argv[0] else 'client'
+        logger_name = 'server' if 'server_start.py' in sys.argv[0] else 'client'
         LOGGER = logging.getLogger(logger_name)
 
         LOGGER.debug(f'Была вызвана функция {func_to_log.__name__} c параметрами {args}, {kwargs}. '
