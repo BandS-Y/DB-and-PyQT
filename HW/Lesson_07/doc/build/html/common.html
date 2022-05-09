@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>common package &#8212; Chat 1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="common-package">
+<h1>common package<a class="headerlink" href="#common-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-common.decos">
+<span id="common-decos-module"></span><h2>common.decos module<a class="headerlink" href="#module-common.decos" title="Permalink to this headline">¶</a></h2>
+<p>Декораторы</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="common.decos.log">
+<span class="sig-prename descclassname"><span class="pre">common.decos.</span></span><span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_to_log</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.decos.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Функция-декоратор
+для логирования запущенных функций</p>
+</dd></dl>
+
+</section>
+<section id="module-common.descrptrs">
+<span id="common-descrptrs-module"></span><h2>common.descrptrs module<a class="headerlink" href="#module-common.descrptrs" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="common.descrptrs.Port">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.descrptrs.</span></span><span class="sig-name descname"><span class="pre">Port</span></span><a class="headerlink" href="#common.descrptrs.Port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Класс - Дескриптор для описания порта
+проверяет диапазон значений порта.</p>
+</dd></dl>
+
+</section>
+<section id="module-common.errors">
+<span id="common-errors-module"></span><h2>common.errors module<a class="headerlink" href="#module-common.errors" title="Permalink to this headline">¶</a></h2>
+<p>Классы-исключения</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="common.errors.IncorrectDataRecivedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.errors.</span></span><span class="sig-name descname"><span class="pre">IncorrectDataRecivedError</span></span><a class="headerlink" href="#common.errors.IncorrectDataRecivedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Исключение  - некорректные данные получены от сокета</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="common.errors.NonDictInputError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.errors.</span></span><span class="sig-name descname"><span class="pre">NonDictInputError</span></span><a class="headerlink" href="#common.errors.NonDictInputError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Исключение - аргумент функции не словарь</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="common.errors.ReqFieldMissingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.errors.</span></span><span class="sig-name descname"><span class="pre">ReqFieldMissingError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">missing_field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.errors.ReqFieldMissingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Ошибка - отсутствует обязательное поле в принятом словаре</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="common.errors.ServerError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.errors.</span></span><span class="sig-name descname"><span class="pre">ServerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.errors.ServerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Исключение - ошибка сервера</p>
+</dd></dl>
+
+</section>
+<section id="module-common.metaclasses">
+<span id="common-metaclasses-module"></span><h2>common.metaclasses module<a class="headerlink" href="#module-common.metaclasses" title="Permalink to this headline">¶</a></h2>
+<p>В основе метода библиотека dis - анализ кода с помощью его дизассемблирования
+(разбор кода на составляющие: в нашем случае - на атрибуты и методы класса).
+<a class="reference external" href="https://docs.python.org/3/library/dis.html">https://docs.python.org/3/library/dis.html</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="common.metaclasses.ClientVerifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.metaclasses.</span></span><span class="sig-name descname"><span class="pre">ClientVerifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clsname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clsdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.metaclasses.ClientVerifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="common.metaclasses.ServerVerifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">common.metaclasses.</span></span><span class="sig-name descname"><span class="pre">ServerVerifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clsname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clsdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#common.metaclasses.ServerVerifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-common.utils">
+<span id="common-utils-module"></span><h2>common.utils module<a class="headerlink" href="#module-common.utils" title="Permalink to this headline">¶</a></h2>
+<p>Утилиты</p>
+</section>
+<section id="module-common.variables">
+<span id="common-variables-module"></span><h2>common.variables module<a class="headerlink" href="#module-common.variables" title="Permalink to this headline">¶</a></h2>
+<p>Константы</p>
+</section>
+<section id="module-common">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-common" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Chat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Yuriy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/common.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -7,10 +7,10 @@ https://docs.python.org/3/library/dis.html
 import dis
 
 
-
+# Метакласс для проверки соответствия сервера:
 from pprint import pprint
 
-# Метакласс для проверки соответствия сервера:
+
 class ServerVerifier(type):
     def __init__(cls, clsname, bases, clsdict):
         # clsname - экземпляр метакласса - Server
@@ -49,7 +49,10 @@ class ServerVerifier(type):
             else:
                 # Раз функция разбираем код, получая используемые методы и атрибуты.
                 for i in ret:
-                    print(i)
+
+                    #  Печатаем список методов
+                    # print(i)
+
                     # i - Instruction(opname='LOAD_GLOBAL', opcode=116, arg=9, argval='send_message',
                     # argrepr='send_message', offset=308, starts_line=201, is_jump_target=False)
                     # opname - имя для операции
@@ -65,13 +68,17 @@ class ServerVerifier(type):
                         if i.argval not in attrs:
                             # заполняем список атрибутами, использующимися в функциях класса
                             attrs.append(i.argval)
-        print(20*'-', 'methods', 20*'-')
-        pprint(methods)
-        print(20*'-', 'methods_2', 20*'-')
-        pprint(methods_2)
-        print(20*'-', 'attrs', 20*'-')
-        pprint(attrs)
-        print(50*'-')
+
+        # # выводим список используемых методов
+        # print(20*'-', 'methods', 20*'-')
+        # pprint(methods)
+        # print(20*'-', 'methods_2', 20*'-')
+        # pprint(methods_2)
+        # print(20*'-', 'attrs', 20*'-')
+        # pprint(attrs)
+        # print(50*'-')
+
+
         # Если обнаружено использование недопустимого метода connect, вызываем исключение:
         if 'connect' in methods:
             raise TypeError('Использование метода connect недопустимо в серверном классе')
