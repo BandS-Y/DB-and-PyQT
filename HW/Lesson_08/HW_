@@ -1,0 +1,6 @@
+https://pypi.org/project/yu-messenger-client/0.0.2/
+https://pypi.org/project/yu-messenger-server/0.0.3/
+
+
+virtualenv venv -p python
+source venv/bin/activate
