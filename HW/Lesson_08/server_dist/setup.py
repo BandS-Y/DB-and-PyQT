@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name="yu_messenger_server",
-      version="0.0.2",
+      version="0.0.3",
       description="Mess Server",
       author="Yuriy Verchenko",
       author_email="yuverch@yandex.ru",
